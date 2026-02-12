@@ -43,22 +43,30 @@ jobs:
           minor_pattern: "feat:"
           version_format: "${major}.${minor}.${patch}"
           bump_each_commit: false
-          initial_version: ${{ steps.current_version.outputs.version }} # Use the version from Cargo.toml as initial
 
       - name: Update Cargo.toml version
+        if: steps.semver.outputs.is_new_version == 'true'
         run: |
           sed -i 's/^version = ".*"/version = "${{ steps.semver.outputs.version }}"/' Cargo.toml
           cargo check
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add Cargo.toml Cargo.lock
-          git commit -m "chore: bump version to ${{ steps.semver.outputs.version }}"
-          git push
+          # Only commit if there are changes
+          git diff-index --quiet HEAD || git commit -m "chore: bump version to ${{ steps.semver.outputs.version }}"
+          # Only push if there was a commit (i.e., a change)
+          if ! git diff-index --quiet HEAD; then
+            git push
+          else
+            echo "No version bump needed, no changes to push."
+          fi
 
       - name: Publish to crates.io
+        if: steps.semver.outputs.is_new_version == 'true'
         run: cargo publish --token ${{ secrets.CARGO_TOKEN }}
 
       - name: Create Git Tag
+        if: steps.semver.outputs.is_new_version == 'true'
         run: |
           git tag v${{ steps.semver.outputs.version }}
           git push origin v${{ steps.semver.outputs.version }}
