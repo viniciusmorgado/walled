@@ -44,11 +44,15 @@ jobs:
         run: |
           sed -i 's/^version = ".*"/version = "${{ steps.semver.outputs.version }}"/' Cargo.toml
           cargo update -p walled
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add Cargo.toml Cargo.lock
-          git commit -m "chore: bump version to ${{ steps.semver.outputs.version }}"
-          git push
+          if ! git diff --quiet HEAD; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add Cargo.toml Cargo.lock
+            git commit -m "chore: bump version to ${{ steps.semver.outputs.version }}"
+            git push
+          else
+            echo "No version change. Nothing to commit."
+          fi
 
       - name: Login to crates.io
         run: cargo login ${{ secrets.CARGO_TOKEN }}
