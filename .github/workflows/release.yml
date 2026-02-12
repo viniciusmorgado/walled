@@ -30,6 +30,10 @@ jobs:
           command: test
           args: --all-features
 
+      - name: Get current Cargo.toml version
+        id: current_version
+        run: echo "version=$(grep '^version =' Cargo.toml | awk -F'"' '{print $2}')" >> $GITHUB_OUTPUT
+
       - name: Get next version
         id: semver
         uses: paulhatch/semantic-version@v5.3.0
@@ -39,6 +43,7 @@ jobs:
           minor_pattern: "feat:"
           version_format: "${major}.${minor}.${patch}"
           bump_each_commit: false
+          initial_version: ${{ steps.current_version.outputs.version }} # Use the version from Cargo.toml as initial
 
       - name: Update Cargo.toml version
         run: |
