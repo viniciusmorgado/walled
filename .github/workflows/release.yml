@@ -50,8 +50,11 @@ jobs:
           git commit -m "chore: bump version to ${{ steps.semver.outputs.version }}"
           git push
 
+      - name: Login to crates.io
+        run: cargo login ${{ secrets.CARGO_TOKEN }}
+
       - name: Publish to crates.io
-        run: cargo publish --token ${{ secrets.CARGO_TOKEN }}
+        run: cargo publish
 
       - name: Create Git Tag
         run: |
