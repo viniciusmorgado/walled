@@ -1,0 +1,17 @@
+[package]
+name = "walled"
+version = "0.1.0"
+edition = "2024"
+
+[profile.release]
+opt-level = 3
+debug = false
+strip = "debuginfo"
+lto = "fat"
+codegen-units = 1
+
+[profile.dev]
+opt-level = 0
+debug = true
+debug-assertions = true
+overflow-checks = true
