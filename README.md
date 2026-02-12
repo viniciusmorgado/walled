@@ -1,4 +1,4 @@
-# walled
+# Walled
 
 `walled` is a Rust crate designed to provide programmatic access to information about network port usage on Linux systems. It allows you to query which TCP and UDP ports, both privileged (1-1023) and unprivileged (1024-65535), are currently in use or are free.
 
