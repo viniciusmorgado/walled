@@ -2,6 +2,8 @@
 name = "walled"
 version = "0.0.1"
 edition = "2024"
+description = "Walled is a dependency-free crate designed to provide programmatic access to information about network port usage on Linux systems."
+license = "BSD-3-Clause"
 
 [profile.release]
 opt-level = 3
