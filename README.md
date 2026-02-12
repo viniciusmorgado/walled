@@ -108,6 +108,37 @@ sudo dnf install iproute2
 sudo yum install iproute2
 ```
 
+## Semantic Versioning (SemVer) and Release Process
+
+This project follows [Semantic Versioning](https://semver.org/). Releases to `crates.io` are automated via GitHub Actions, which determines version bumps based on commit messages.
+
+To trigger a specific version bump, use the following conventions in your commit messages, particularly in the commit subject line:
+
+-   **Major Version Bump (e.g., `1.0.0` -> `2.0.0`):**
+    Include `BREAKING CHANGE:` in the commit message body (not just the subject line).
+    Example:
+    ```
+    feat: introduce new API for port scanning
+
+    BREAKING CHANGE: The previous `scan_ports` function has been removed.
+    Users must now use `new_scan_api` instead.
+    ```
+
+-   **Minor Version Bump (e.g., `0.1.0` -> `0.2.0`):**
+    Start your commit message subject with `feat:`.
+    Example: `feat: add new function to list all open ports`
+
+-   **Patch Version Bump (e.g., `0.0.1` -> `0.0.2`):**
+    Any commit that does not contain `BREAKING CHANGE:` and does not start with `feat:` will typically result in a patch version bump. Common prefixes include `fix:`, `chore:`, `docs:`, `refactor:`, `style:`, `test:`, etc.
+    Example: `fix: correct parsing of ss output for IPv6 addresses`
+
+The automated release workflow will:
+1.  Determine the next version based on merged commit messages to `main`.
+2.  Update `Cargo.toml` and `Cargo.lock` with the new version.
+3.  Commit and push the version bump.
+4.  Publish the new version to `crates.io`.
+5.  Create a corresponding Git tag (e.g., `v1.2.3`).
+
 ## License
 
 `walled` is licensed under the BSD 3-Clause License. See the `LICENSE` file for more details.
